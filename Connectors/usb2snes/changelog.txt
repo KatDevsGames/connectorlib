@@ -1,0 +1,99 @@
+v6
+--
+(6.1) Removed verbose logging by default.  Reduced total log file size.
+(6.1) Updated tool tip to make SD2SNES state less ambiguous.
+Fixed hookless patch region so it doesn't crash SNES when hook is enabled.
+Added websocket connectivity information.
+Added Name command to identify websocket app.
+Added currentRom and currentFeature strings to Info command.
+Added slightly faster mirror for first $7800 of WRAM.
+
+v5
+--
+(5.1) Added back save_state patch button checks based on game type.
+(5.1) Fixed crash when exiting tool tray app when dialog box is open for AutoUpdate.
+(5.1) Added AppVersion command.
+(5.1) Removed flushing log file on every command by default.  Enable in usb2snes.exe.config.
+Fixed (workaround) stalls with long transfers by using 512B packet size.
+Added NMI-based hookless code execution region @ $2C00-$2FFF
+Added basic server log file.
+Updated save state patch to support external saves and simplify button detection code.
+
+v4
+--
+(4.2) Added ZeldaHUD
+(4.2) Fixed non-vector multiple address GET/PUT operations by rewriting server handlers.
+(4.1) Removed some websocket debug output.
+Fixed NMI hook patches so they are persistant and don't conflict with the menu.
+Updated save_state patch to support memory load/save trigger.
+Added (experimental) update feature.
+
+v3
+--
+(3.1) Fixed InputViewer hardcoded COM port.
+(3.1) Cleaned up application listing feature.  Adding an app now requires making a apps/<directory> (corresponds to displayed app name) and placing an executable inside of it.
+Replaced usb2snes file viewer program with unified usb2snes tray app.  It supports a websockets based interface on localhost:8080 which enables multiple clients to talk to one or more SD2SNES devices over USB.
+Added input viewer.
+Fixed several bugs in the firmware.
+
+v2
+--
+Fixed read data corruption bug.
+Fixed gamepad data read hack.
+
+v1
+--
+Updated versioning system to use v# format.
+Added info command.
+
+v0.66
+-----
+Fixed several bugs with NORESP and vector operations.
+Reverted CX4 and MSU enabled FPGA file to 0.1.7e.
+
+v0.65
+-----
+Fixed save state to not enable PPU until after PPU alignment.  Fixes some momentary graphics glitches on load.
+Fixed many timing and questionable SNES bus loading statements in the FPGA.
+Added support for 64B data block sizes and no responses based on flag.
+Added support for 64B vector VGET/VPUT commands.
+Removed MSU support from base firmware.
+Removed ZeldaHUD.
+Changed save to SD code to compute CRC across multiple iterations to leave time for USB on large SaveRAM images.
+
+v0.6
+----
+Fixed DMA problem introduced in previous version's state.
+Updated ZeldaHUD to ignore exceptions on COM port device queries.
+Added DMA engine and spin loop logic.  Changed save states to use DMA engine.
+Added reset/menu and rearranged buttons.
+Fixed more timeouts.
+
+v0.5
+----
+Fixed (workaround) for EXE/RESET races seen in windows10.
+Added context saving state machine.
+Added simple RAM viewer.
+
+v0.4
+----
+Fixed more timeouts due to disconnect problems.  There are still more left to fix.  E.g. pulling the cable out typically requires a reboot of the snes and app.
+Added preliminary USB/NET memory region support.  Work in progress.
+Fixed (workaround) problem where querying certain COM devices results in an exception.  The exception is now discarded.
+
+v0.3
+----
+Fixed more timeouts due to collisions with other interrupts in FW.  MSU is still buggy.
+Added Write-Only register snooping to enable save-stating.
+Added basic IPS patch and state managing support.  Included save_state IPS patch.
+
+v0.2
+----
+Added more features to file transfer program.
+Added hack for SRAM reads to workaround timeout problems.
+
+v0.1
+----
+Rewrote sd2snes usb support.
+Added upload/delete/rename functionality.
+Fixed problems with boot and download.
