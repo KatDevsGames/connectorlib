@@ -78,6 +78,9 @@ function sendBlock(block)
 end
 
 function processBlock(block)
+	lastKeepalive = frameCounter
+	
+	if(not block) then return end
 	local commandType = block["type"]
 	
 	local result = {}
@@ -87,8 +90,6 @@ function processBlock(block)
 	result["message"] = ""
 	result["address"] = block["address"]
 	result["value"] = block["value"]
-	
-	lastKeepalive = frameCounter
 	
 	if commandType==0x00 then --read byte
 		result["value"]=memory.readbyte(block["address"])
@@ -142,8 +143,9 @@ function processBuffer()
 		
 		buffer=buffer..nb
 		if string.byte(nb)==0 then
-			processBlock(json.decode(buffer))
-			--emu.message(buffer);
+			local unpacked = json.decode(buffer)
+			processBlock(unpacked)
+			if(not unpacked) then emu.message("Failed to unpack block " .. buffer) end
 			buffer=""
 		end
 	end
