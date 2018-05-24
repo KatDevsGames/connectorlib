@@ -20,11 +20,23 @@ using JetBrains.Annotations;
 
 namespace ConnectorLib
 {
+    public interface IBatchWriteContext : IDisposable
+    {
+    }
+
     /// <summary>
     /// Provides an interface for SNES connector objects to implement.
     /// </summary>
     public interface ISNESConnector : IDisposable
     {
+        /// <summary>
+        /// Opens a context which can be used to perform multiple writes in a synchronized fashion. This should be used anytime
+        /// multiple writes are done "at the same time", as some supported platforms may have limits on the frequency of supported
+        /// write operations.
+        /// </summary>
+        /// <returns>A context for performing batch writes.</returns>
+        IBatchWriteContext OpenBatchWriteContext();
+
         /// <summary>
         /// Writes a byte to the SNES.
         /// </summary>

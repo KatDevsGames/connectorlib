@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin name="SFC Test Cartridge Design" author="Enmet" type="snes">
+
+    <background name="Default" image="sfcpad.png" />
+
+    <button name="a" image="a_sfcpad_button.png" x="135" y="38" width="15" height="15" />
+    <button name="b" image="a_sfcpad_button.png" x="120" y="52" width="15" height="15" />
+    <button name="x" image="a_sfcpad_button.png" x="120" y="24" width="15" height="15" />
+    <button name="y" image="a_sfcpad_button.png" x="105" y="38" width="15" height="15" />
+
+    <button name="l" image="a_sfcpad_l.png" x="19" y="1" width="38" height="7" />
+    <button name="r" image="a_sfcpad_r.png" x="107" y="1" width="38" height="7" />
+
+    <button name="start" image="a_sfcpad_strtsel.png" x="77" y="44" width="14" height="14" />
+    <button name="select" image="a_sfcpad_strtsel.png" x="60" y="44" width="14" height="14" />
+
+    <button name="up" image="a_sfcpad_up.png" x="30" y="29" width="11" height="10" />
+    <button name="down" image="a_sfcpad_down.png" x="30" y="52" width="11" height="10" />
+    <button name="left" image="a_sfcpad_left.png" x="22" y="39" width="8" height="13" />
+    <button name="right" image="a_sfcpad_right.png" x="41" y="39" width="8" height="13" />
+
+</skin>

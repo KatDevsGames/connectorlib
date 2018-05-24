@@ -50,9 +50,20 @@ namespace ConnectorLib
         public string Message { get; set; } = "";
 
         /// <summary>
-        /// The 24-bit SNES bus address (if any).
+        /// The native bus address (if any).
         /// </summary>
         public uint Address { get; set; }
+
+        /// <summary>
+        /// The memory domain (if any).
+        /// </summary>
+        [NotNull]
+        public string Domain { get; set; } = "";
+
+        /// <summary>
+        /// The domain-relative address (if any).
+        /// </summary>
+        public uint DomainAddress { get; set; }
 
         /// <summary>
         /// The operating value, if any.
@@ -83,6 +94,8 @@ namespace ConnectorLib
             Type = (CommandType)info.GetByte("type");
             Message = info.GetString("message") ?? string.Empty;
             Address = info.GetUInt32("address");
+            Domain = info.GetString("domain") ?? string.Empty;
+            DomainAddress = info.GetUInt32("domainAddress");
             Value = info.GetUInt32("value");
         }
 
@@ -98,6 +111,8 @@ namespace ConnectorLib
             info.AddValue("type", (byte)Type);
             info.AddValue("message", Message);
             info.AddValue("address", Address);
+            info.AddValue("domain", Domain);
+            info.AddValue("domainAddress", DomainAddress);
             info.AddValue("value", Value);
         }
 

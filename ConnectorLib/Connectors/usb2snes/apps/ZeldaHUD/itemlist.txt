@@ -1,0 +1,190 @@
+//Please note the first 45 items (45 is Agahnim) 
+//order should not be changed if you use auto-update
+//<- commentary not readed by the program 
+//Also do not use , in item name :p
+
+//Name, {Icons Order},Loop,isBottle,haveCount,dungeonType,{eval}
+:Bow,{0,48,194,49},false,false,false,false,{ on = (d[0x340] != 0 || (d[0x414]&0xC0) != 0), level = ((d[0x340] > 1) ? (d[0x340]-1) : 0) | ((d[0x414]&0x40)>>5) | ((d[0x414]&0x80)>>7) };
+:Boomerang,{1},false,false,false,false,{ on = ((d[0x412]&0x80) != 0) || (d[i] == 1), level = 0 };
+:Hookshot,{2},false,false,false,false,default;
+:Bombs,{3},false,false,false,false,default;
+:Mushroom,{4,56},false,false,false,false,{ on = ((d[0x412]&0x20) != 0) || (d[0x344] == 1), level = 0xFF };
+:Fire Rod,{5},false,false,false,false,default;
+:Ice Rod,{6},false,false,false,false,default;
+:Bombos,{7},false,false,false,false,default;
+:Ether,{8},false,false,false,false,default;
+:Quake,{9},false,false,false,false,default;
+:Lamp,{10},false,false,false,false,default;
+:Hammer,{11},false,false,false,false,default;
+//,{ on = (d[i] != 0), level = (d[i] > 1) ? 1 : 0 };
+:Shovel,{12,57},false,false,false,false,{ on = ((d[0x412]&0x04) != 0) || (d[i] == 1), level = 0xFF };
+:Net,{13},false,false,false,false,default;
+:Book,{14},false,false,false,false,default;
+:Cane of Somaria,{15},false,false,false,false,{ on = (d[i+1] != 0), level = 0 };
+:Cane of Byrna,{16},false,false,false,false,{ on = (d[i+1] != 0), level = 0 };
+:Cape,{17},false,false,false,false,{ on = (d[i+1] != 0), level = 0 };
+:Mirror,{18,18},false,false,false,false,{ on = (d[i+1] != 0), level = (d[i+1] > 0) ? (d[i+1]-1) : 0 };
+:Gloves,{19,43},false,false,false,false,{ on = (d[i+1] != 0), level = (d[i+1] > 0) ? (d[i+1]-1) : 0 };
+:Boots,{20},false,false,false,false,{ on = (d[i+1] != 0), level = 0 };
+:Flippers,{21},false,false,false,false,{ on = (d[i+1] != 0), level = 0 };
+:Moon Pearl,{22},false,false,false,false,{ on = (d[i+1] != 0), level = 0 };
+:Swords,{23,38,39,40},false,false,false,false,{ on = (d[i+2] != 0), level = (d[i+2] > 0) ? (d[i+2]-1) : 0 };
+:Shield,{24,44,45},false,false,false,false,{ on = (d[i+2] != 0), level = (d[i+2] > 0) ? (d[i+2]-1) : 0 };
+:Tunic,{25,41,42},false,false,false,false,{ on = true, level = (int)d[i+2] };
+:Bottle 1,{26,26,50,51,52,53,54,54},false,true,false,false,{ on = (d[0x35C] != 0), level = (d[0x35C] > 1) ? d[0x35C]-1 : 0 };
+:Bottle 2,{26,26,50,51,52,53,54,54},false,true,false,false,{ on = (d[0x35D] != 0), level = (d[0x35D] > 1) ? d[0x35D]-1 : 0 };
+:Bottle 3,{26,26,50,51,52,53,54,54},false,true,false,false,{ on = (d[0x35E] != 0), level = (d[0x35E] > 1) ? d[0x35E]-1 : 0 };
+:Bottle 4,{26,26,50,51,52,53,54,54},false,true,false,false,{ on = (d[0x35F] != 0), level = (d[0x35F] > 1) ? d[0x35F]-1 : 0 };
+:Eastern Pendant,{27},false,false,false,false,{ on = (d[0x374] & 4) != 0, level = 0 };
+:Desert Pendant,{28},false,false,false,false,{ on = (d[0x374] & 2) != 0, level = 0 };
+:Hera,{29},false,false,false,false,{ on = (d[0x374] & 1) != 0, level = 0 };
+:Crystal 1,{30},false,false,false,false,{ on = (d[0x37A] &  1) != 0, level = 0 };
+:Crystal 2,{31},false,false,false,false,{ on = (d[0x37A] &  2) != 0, level = 0 };
+:Crystal 3,{32},false,false,false,false,{ on = (d[0x37A] &  4) != 0, level = 0 };
+:Crystal 4,{33},false,false,false,false,{ on = (d[0x37A] &  8) != 0, level = 0 };
+:Crystal 5,{34},false,false,false,false,{ on = (d[0x37A] & 16) != 0, level = 0 };
+:Crystal 6,{35},false,false,false,false,{ on = (d[0x37A] & 32) != 0, level = 0 };
+:Crystal 7,{36},false,false,false,false,{ on = (d[0x37A] & 64) != 0, level = 0 };
+:Red Boomerang,{37},false,false,false,false,{ on = ((d[0x412]&0x40) != 0) || (d[0x341] == 2), level = 0 };
+:Powder,{46},false,false,false,false,{ on = ((d[0x412]&0x10) != 0) || (d[0x344] == 2), level = 0 };
+:Flute,{47},false,false,false,false,{ on = ((d[0x412]&0x03) != 0) || (d[0x34C] >= 2), level = 0 };
+:Agahnim,{55},false,false,false,false,{ on = ((d[0x20*2+1]) & 0x08) != 0, level = 0 };
+:Timer,{61},false,false,false,false; //show a timer that start when pressing Timer_Start
+:Timer_Start,{62},false,false,false,false; //start the timer
+:Timer_Done,{63},false,false,false,false; //end the timer
+:Timer_StartDone,{62,63},false,false,false,false; //start and end the timer
+:Nothing,{53},false,false,false,false; //can be changed in something else - do not remove
+:Nothing,{54},false,false,false,false; //can be changed in something else - do not remove
+:Nothing,{55},false,false,false,false;
+:Chest,{58,59},false,false,false,false; //Do not remove anything above here
+:Sanc Heart,{60},false,false,false,false;
+:Heart Pieces,{66,67,68,69},true,false,false,false;
+:Heart Pieces,{66,67,68,69},true,false,false,false;
+:Bottle Counter,{70,71,72,73},false,false,false,false,{ on = (d[0x35C]|d[0x35D]|d[0x35E]|d[0x35F]) != 0, level = ((d[0x35C]|d[0x35D]|d[0x35E]|d[0x35F]) != 0) ? ((d[0x35C]>0?1:0)+(d[0x35D]>0?1:0)+(d[0x35E]>0?1:0)+(d[0x35F]>0?1:0))-1 : 0 };
+:Bottle Counter2,{26,71,72,73},false,false,false,false,{ on = (d[0x35C]|d[0x35D]|d[0x35E]|d[0x35F]) != 0, level = ((d[0x35C]|d[0x35D]|d[0x35E]|d[0x35F]) != 0) ? ((d[0x35C]>0?1:0)+(d[0x35D]>0?1:0)+(d[0x35E]>0?1:0)+(d[0x35F]>0?1:0))-1 : 0 };
+:ShovelFlute,{12,47},false,false,false,false,{ on = (d[0x34C] != 0), level = (d[0x34C] > 2) ? 1 : (d[0x34C] > 0) ?(d[0x34C]-1) : 0 };
+:MushPowder,{4,46},false,false,false,false,{ on = (d[0x344] != 0), level = (d[0x344] > 0) ? (d[0x344]-1) : 0 };
+:BothBoomerang,{1,37},false,false,false,false,{ on = (d[0x341] != 0), level = (d[0x341] > 0) ? (d[0x341]-1) : 0 };
+:DoubleQuarterMagic,{64,65},false,false,false,false,{ on = (d[0x37B] != 0), level = (d[0x37B] > 0) ? (d[0x37B]-1) : 0 };
+:Heart Counter,{60},false,false,true,false,{ on = true, level = 0xFF };
+:HeartPieces Counter,{67},false,false,true,false,{ on = true, level = 0xFF };
+:PoD,{77,78,79,80},false,false,false,true,{ on = (d[0x5A*2+1] & 0x08) != 0, level = 0 };
+:Swamp,{81,82,83,84},false,false,false,true,{ on = (d[0x06*2+1] & 0x08) != 0, level = 0 };
+:Skull,{85,86,87,88},false,false,false,true,{ on = (d[0x29*2+1] & 0x08) != 0, level = 0 };
+:Thieves,{89,90,91,92},false,false,false,true,{ on = (d[0xAC*2+1] & 0x08) != 0, level = 0 };
+:Ice,{93,94,95,96},false,false,false,true,{ on = (d[0xDE*2+1] & 0x08) != 0, level = 0 };
+:Mire,{97,98,99,100},false,false,false,true,{ on = (d[0x90*2+1] & 0x08) != 0, level = 0 };
+:TRock,{101,102,103,104},false,false,false,true,{ on = (d[0xA4*2+1] & 0x08) != 0, level = 0 };
+:Eastern,{105,106,107,108},false,false,false,true,{ on = (d[0xC8*2+1] & 0x08) != 0, level = 0 };
+:Desert,{109,110,111,112},false,false,false,true,{ on = (d[0x33*2+1] & 0x08) != 0, level = 0 };
+:Hera,{113,114,115,116},false,false,false,true,{ on = (d[0x07*2+1] & 0x08) != 0, level = 0 };
+//:PoD,{77,78,79,80},false,false,false,true,{ on = (d[0x37A] &  2) != 0, level = 0 };
+//:Swamp,{81,82,83,84},false,false,false,true,{ on = (d[0x37A] & 16) != 0, level = 0 };
+//:Skull,{85,86,87,88},false,false,false,true,{ on = (d[0x37A] & 64) != 0, level = 0 };
+//:Thieves,{89,90,91,92},false,false,false,true,{ on = (d[0x37A] & 32) != 0, level = 0 };
+//:Ice,{93,94,95,96},false,false,false,true,{ on = (d[0x37A] &  4) != 0, level = 0 };
+//:Mire,{97,98,99,100},false,false,false,true,{ on = (d[0x37A] &  1) != 0, level = 0 };
+//:TRock,{101,102,103,104},false,false,false,true,{ on = (d[0x37A] &  8) != 0, level = 0 };
+//:Eastern,{105,106,107,108},false,false,false,true,{ on = (d[0x374] & 4) != 0, level = 0 };
+//:Desert,{109,110,111,112},false,false,false,true,{ on = (d[0x374] & 2) != 0, level = 0 };
+//:Hera,{113,114,115,116},false,false,false,true,{ on = (d[0x374] & 1) != 0, level = 0 };
+:Bombos Dungeon,{7,117,120,123},false,false,false,true;
+:Ether Dungeon,{8,118,121,124},false,false,false,true;
+:Quake Dungeon,{9,119,122,125},false,false,false,true;
+:Mire Medallion,{117,118,119},false,false,false,false;
+:TRock Medallion,{120,121,122},false,false,false,false;
+:ChestEP,{126,127,130},false,false,false,false,{ on = true, level = 0xFF };
+:ChestDP,{126,128},false,false,false,false,{ on = true, level = 0xFF };
+:ChestTH,{126,128},false,false,false,false,{ on = true, level = 0xFF };
+:ChestPoD,{126,127,129,131,134},false,false,false,false,{ on = true, level = 0xFF };
+:ChestSP,{126,127,129,131,133,136},false,false,false,false,{ on = true, level = 0xFF };
+:ChestSW,{126,128},false,false,false,false,{ on = true, level = 0xFF };
+:ChestTT,{126,127,129,132},false,false,false,false,{ on = true, level = 0xFF };
+:ChestIP,{126,127,130},false,false,false,false,{ on = true, level = 0xFF };
+:ChestMM,{126,128},false,false,false,false,{ on = true, level = 0xFF };
+:ChestTR,{126,127,129,131,134},false,false,false,false,{ on = true, level = 0xFF };
+:ChestEscape,{126,127,129,131,133,136},false,false,false,false,{ on = true, level = 0xFF };
+:ChestEP2,{129,127,126,59},false,false,false,false,{ on = true, level = ((d[0xA8*2+0]&0x10)!=0 && IsTreasure("Eastern Palace - Compass Chest", t)?1:0)+((d[0xA9*2+0]&0x10)!=0 && IsTreasure("Eastern Palace - Big Chest", t)?1:0)+((d[0xAA*2+0]&0x10)!=0 && IsTreasure("Eastern Palace - Map Chest", t)?1:0)+((d[0xB8*2+0]&0x10)!=0 && IsTreasure("Eastern Palace - Big Key Chest", t)?1:0)+((d[0xB9*2+0]&0x10)!=0 && IsTreasure("Eastern Palace - Cannonball Chest", t)?1:0)+((d[0xC8*2+1]&0x08)!=0 && IsTreasure("Eastern Palace - Armos Knights", t)?1:0) };
+:ChestDP2,{127,126,59},false,false,false,false,{ on = true, level = ((d[0x73*2+0]&0x10)!=0 && IsTreasure("Desert Palace - Big Chest", t)?1:0)+((d[0x73*2+1]&0x04)!=0 && IsTreasure("Desert Palace - Torch", t)?1:0)+((d[0x74*2+0]&0x10)!=0 && IsTreasure("Desert Palace - Map Chest", t)?1:0)+((d[0x75*2+0]&0x10)!=0 && IsTreasure("Desert Palace - Big Key Chest", t)?1:0)+((d[0x85*2+0]&0x10)!=0 && IsTreasure("Desert Palace - Compass Chest", t)?1:0)+((d[0x33*2+1]&0x08)!=0 && IsTreasure("Desert Palace - Lanmolas'", t)?1:0) };
+:ChestTH2,{127,126,59},false,false,false,false,{ on = true, level = ((d[0x27*2+0]&0x10)!=0 && IsTreasure("Tower of Hera - Big Chest", t)?1:0)+((d[0x27*2+0]&0x20)!=0 && IsTreasure("Tower of Hera - Compass Chest", t)?1:0)+((d[0x77*2+0]&0x10)!=0 && IsTreasure("Tower of Hera - Map Chest", t)?1:0)+((d[0x87*2+0]&0x10)!=0 && IsTreasure("Tower of Hera - Big Key Chest", t)?1:0)+((d[0x87*2+1]&0x04)!=0 && IsTreasure("Tower of Hera - Basement Cage", t)?1:0)+((d[0x07*2+1]&0x08)!=0 && IsTreasure("Tower of Hera - Moldorm", t)?1:0) };
+:ChestPoD2,{133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x09*2+0]&0x10)!=0 && IsTreasure("Palace of Darkness - Shooter Room", t)?1:0)+((d[0x0A*2+0]&0x10)!=0 && IsTreasure("Palace of Darkness - Stalfos Basement", t)?1:0)+((d[0x19*2+0]&0x10)!=0 && IsTreasure("Palace of Darkness - Dark Maze - Top", t)?1:0)+((d[0x19*2+0]&0x20)!=0 && IsTreasure("Palace of Darkness - Dark Maze - Bottom", t)?1:0)+((d[0x1A*2+0]&0x10)!=0 && IsTreasure("Palace of Darkness - Big Chest", t)?1:0)+((d[0x1A*2+0]&0x20)!=0 && IsTreasure("Palace of Darkness - Compass Chest", t)?1:0)+((d[0x1A*2+0]&0x40)!=0 && IsTreasure("Palace of Darkness - Harmless Hellway", t)?1:0)+((d[0x2A*2+0]&0x10)!=0 && IsTreasure("Palace of Darkness - The Arena - Ledge", t)?1:0)+((d[0x2A*2+0]&0x20)!=0 && IsTreasure("Palace of Darkness - The Arena - Bridge", t)?1:0)+((d[0x2B*2+0]&0x10)!=0 && IsTreasure("Palace of Darkness - Map Chest", t)?1:0)+((d[0x3A*2+0]&0x10)!=0 && IsTreasure("Palace of Darkness - Big Key Chest", t)?1:0)+((d[0x6A*2+0]&0x10)!=0 && IsTreasure("Palace of Darkness - Dark Basement - Left", t)?1:0)+((d[0x6A*2+0]&0x20)!=0 && IsTreasure("Palace of Darkness - Dark Basement - Right", t)?1:0)+((d[0x5A*2+1]&0x08)!=0 && IsTreasure("Palace of Darkness - Helmasaur King", t)?1:0) };
+:ChestSP2,{135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x28*2+0]&0x10)!=0 && IsTreasure("Swamp Palace - Entrance", t)?1:0)+((d[0x34*2+0]&0x10)!=0 && IsTreasure("Swamp Palace - West Chest", t)?1:0)+((d[0x35*2+0]&0x10)!=0 && IsTreasure("Swamp Palace - Big Key Chest", t)?1:0)+((d[0x36*2+0]&0x10)!=0 && IsTreasure("Swamp Palace - Big Chest", t)?1:0)+((d[0x37*2+0]&0x10)!=0 && IsTreasure("Swamp Palace - Map Chest", t)?1:0)+((d[0x46*2+0]&0x10)!=0 && IsTreasure("Swamp Palace - Compass Chest", t)?1:0)+((d[0x66*2+0]&0x10)!=0 && IsTreasure("Swamp Palace - Waterfall Room", t)?1:0)+((d[0x76*2+0]&0x10)!=0 && IsTreasure("Swamp Palace - Flooded Room - Left", t)?1:0)+((d[0x76*2+0]&0x20)!=0 && IsTreasure("Swamp Palace - Flooded Room - Right", t)?1:0)+((d[0x06*2+1]&0x08)!=0 && IsTreasure("Swamp Palace - Arrghus", t)?1:0) };
+:ChestSW2,{127,126,59},false,false,false,false,{ on = true, level = ((d[0x57*2+0]&0x10)!=0 && IsTreasure("Skull Woods - Big Key Chest", t)?1:0)+((d[0x57*2+0]&0x20)!=0 && IsTreasure("Skull Woods - Pot Prison", t)?1:0)+((d[0x58*2+0]&0x10)!=0 && IsTreasure("Skull Woods - Big Chest", t)?1:0)+((d[0x58*2+0]&0x20)!=0 && IsTreasure("Skull Woods - Map Chest", t)?1:0)+((d[0x59*2+0]&0x10)!=0 && IsTreasure("Skull Woods - Bridge Room", t)?1:0)+((d[0x67*2+0]&0x10)!=0 && IsTreasure("Skull Woods - Compass Chest", t)?1:0)+((d[0x68*2+0]&0x10)!=0 && IsTreasure("Skull Woods - Pinball Room", t)?1:0)+((d[0x29*2+1]&0x08)!=0 && IsTreasure("Skull Woods - Mothula", t)?1:0) };
+:ChestTT2,{131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x44*2+0]&0x10)!=0 && IsTreasure("Thieves' Town - Big Chest", t)?1:0)+((d[0x45*2+0]&0x10)!=0 && IsTreasure("Thieves' Town - Blind's Cell", t)?1:0)+((d[0x65*2+0]&0x10)!=0 && IsTreasure("Thieves' Town - Attic", t)?1:0)+((d[0xCB*2+0]&0x10)!=0 && IsTreasure("Thieves' Town - Ambush Chest", t)?1:0)+((d[0xDB*2+0]&0x10)!=0 && IsTreasure("Thieves' Town - Map Chest", t)?1:0)+((d[0xDB*2+0]&0x20)!=0 && IsTreasure("Thieves' Town - Big Key Chest", t)?1:0)+((d[0xDC*2+0]&0x10)!=0 && IsTreasure("Thieves' Town - Compass Chest", t)?1:0)+((d[0xAC*2+1]&0x08)!=0 && IsTreasure("Thieves' Town - Blind", t)?1:0) };
+:ChestIP2,{129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x1F*2+0]&0x10)!=0 && IsTreasure("Ice Palace - Big Key Chest", t)?1:0)+((d[0x2E*2+0]&0x10)!=0 && IsTreasure("Ice Palace - Compass Chest", t)?1:0)+((d[0x3F*2+0]&0x10)!=0 && IsTreasure("Ice Palace - Map Chest", t)?1:0)+((d[0x5F*2+0]&0x10)!=0 && IsTreasure("Ice Palace - Spike Room", t)?1:0)+((d[0x7E*2+0]&0x10)!=0 && IsTreasure("Ice Palace - Freezor Chest", t)?1:0)+((d[0x9E*2+0]&0x10)!=0 && IsTreasure("Ice Palace - Big Chest", t)?1:0)+((d[0xAE*2+0]&0x10)!=0 && IsTreasure("Ice Palace - Iced T Room", t)?1:0)+((d[0xDE*2+1]&0x08)!=0 && IsTreasure("Ice Palace - Kholdstare", t)?1:0) };
+:ChestMM2,{127,126,59},false,false,false,false,{ on = true, level = ((d[0xA2*2+0]&0x10)!=0 && IsTreasure("Misery Mire - Bridge Chest", t)?1:0)+((d[0xB3*2+0]&0x10)!=0 && IsTreasure("Misery Mire - Spike Chest", t)?1:0)+((d[0xC1*2+0]&0x10)!=0 && IsTreasure("Misery Mire - Compass Chest", t)?1:0)+((d[0xC2*2+0]&0x10)!=0 && IsTreasure("Misery Mire - Main Lobby", t)?1:0)+((d[0xC3*2+0]&0x10)!=0 && IsTreasure("Misery Mire - Big Chest", t)?1:0)+((d[0xC3*2+0]&0x20)!=0 && IsTreasure("Misery Mire - Spike Chest", t)?1:0)+((d[0xD1*2+0]&0x10)!=0 && IsTreasure("Misery Mire - Big Key Chest", t)?1:0)+((d[0x90*2+1]&0x08)!=0 && IsTreasure("Misery Mire - Vitreous", t)?1:0) };
+:ChestTR2,{133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x04*2+0]&0x10)!=0 && IsTreasure("Turtle Rock - Crystaroller Room", t)?1:0)+((d[0x14*2+0]&0x10)!=0 && IsTreasure("Turtle Rock - Big Key Chest", t)?1:0)+((d[0x24*2+0]&0x10)!=0 && IsTreasure("Turtle Rock - Big Chest", t)?1:0)+((d[0xB6*2+0]&0x10)!=0 && IsTreasure("Turtle Rock - Chain Chomps", t)?1:0)+((d[0xB7*2+0]&0x10)!=0 && IsTreasure("Turtle Rock - Roller Room - Left", t)?1:0)+((d[0xB7*2+0]&0x20)!=0 && IsTreasure("Turtle Rock - Roller Room - Right", t)?1:0)+((d[0xD5*2+0]&0x10)!=0 && IsTreasure("Turtle Rock - Eye Bridge - Top Right", t)?1:0)+((d[0xD5*2+0]&0x20)!=0 && IsTreasure("Turtle Rock - Eye Bridge - Top Left", t)?1:0)+((d[0xD5*2+0]&0x40)!=0 && IsTreasure("Turtle Rock - Eye Bridge - Bottom Right", t)?1:0)+((d[0xD5*2+0]&0x80)!=0 && IsTreasure("Turtle Rock - Eye Bridge - Bottom Left", t)?1:0)+((d[0xD6*2+0]&0x10)!=0 && IsTreasure("Turtle Rock - Compass Chest", t)?1:0)+((d[0xA4*2+1]&0x08)!=0 && IsTreasure("Turtle Rock - Trinexx", t)?1:0) };
+:ChestEscape2,{135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x11*2+0]&0x10)!=0 && IsTreasure("Sewers - Secret Room - Left", t)?1:0)+((d[0x11*2+0]&0x20)!=0 && IsTreasure("Sewers - Secret Room - Middle", t)?1:0)+((d[0x11*2+0]&0x40)!=0 && IsTreasure("Sewers - Secret Room - Right", t)?1:0)+((d[0x32*2+0]&0x10)!=0 && IsTreasure("Sewers - Dark Cross", t)?1:0)+((d[0x55*2+0]&0x10)!=0 && IsTreasure("Secret Passage", t)?1:0)+((d[0x71*2+0]&0x10)!=0 && IsTreasure("Hyrule Castle - Boomerang Chest", t)?1:0)+((d[0x72*2+0]&0x10)!=0 && IsTreasure("Hyrule Castle - Map Chest", t)?1:0)+((d[0x80*2+0]&0x10)!=0 && IsTreasure("Hyrule Castle - Zelda's Cell", t)?1:0) };
+:EPBoss,{179},false,false,false,false,{ on = (d[0xC8*2+1] & 0x08) != 0, level = 0 };
+:DPBoss,{180},false,false,false,false,{ on = (d[0x33*2+1] & 0x08) != 0, level = 0 };
+:THBoss,{181},false,false,false,false,{ on = (d[0x07*2+1] & 0x08) != 0, level = 0 };
+:PODBoss,{182},false,false,false,false,{ on = (d[0x5A*2+1] & 0x08) != 0, level = 0 };
+:SPBoss,{183},false,false,false,false,{ on = (d[0x06*2+1] & 0x08) != 0, level = 0 };
+:SWBoss,{184},false,false,false,false,{ on = (d[0x29*2+1] & 0x08) != 0, level = 0 };
+:TTBoss,{185},false,false,false,false,{ on = (d[0xAC*2+1] & 0x08) != 0, level = 0 };
+:IPBoss,{186},false,false,false,false,{ on = (d[0xDE*2+1] & 0x08) != 0, level = 0 };
+:MMBoss,{187},false,false,false,false,{ on = (d[0x90*2+1] & 0x08) != 0, level = 0 };
+:TRBoss,{188},false,false,false,false,{ on = (d[0xA4*2+1] & 0x08) != 0, level = 0 };
+// tie the pendant/crystal with the boss kill since they may be randomized
+:EPRandom,{141,142,139,140},false,false,false,true,{ on = (d[0xC8*2+1] & 0x08) != 0, level = 0 };
+:DPRandom,{145,146,143,144},false,false,false,true,{ on = (d[0x33*2+1] & 0x08) != 0, level = 0 };
+:THRandom,{149,150,147,148},false,false,false,true,{ on = (d[0x07*2+1] & 0x08) != 0, level = 0 };
+:C1Random,{175,176,177,178},false,false,false,true,{ on = (d[0x5A*2+1] & 0x08) != 0, level = 0 };
+:C2Random,{151,154,152,153},false,false,false,true,{ on = (d[0x06*2+1] & 0x08) != 0, level = 0 };
+:C3Random,{155,158,156,157},false,false,false,true,{ on = (d[0x29*2+1] & 0x08) != 0, level = 0 };
+:C4Random,{159,162,160,161},false,false,false,true,{ on = (d[0xAC*2+1] & 0x08) != 0, level = 0 };
+:C5Random,{163,166,164,165},false,false,false,true,{ on = (d[0xDE*2+1] & 0x08) != 0, level = 0 };
+:C6Random,{167,170,168,169},false,false,false,true,{ on = (d[0x90*2+1] & 0x08) != 0, level = 0 };
+:C7Random,{171,174,172,173},false,false,false,true,{ on = (d[0xA4*2+1] & 0x08) != 0, level = 0 };
+//:EPRandom,{141,142,139,140},false,false,false,true,{ on = (d[0x374] & 4) != 0, level = 0 };
+//:DPRandom,{145,146,143,144},false,false,false,true,{ on = (d[0x374] & 2) != 0, level = 0 };
+//:THRandom,{149,150,147,148},false,false,false,true,{ on = (d[0x374] & 1) != 0, level = 0 };
+//:C1Random,{175,176,177,178},false,false,false,true,{ on = (d[0x37A] &  1) != 0, level = 0 };
+//:C2Random,{151,154,152,153},false,false,false,true,{ on = (d[0x37A] &  2) != 0, level = 0 };
+//:C3Random,{155,158,156,157},false,false,false,true,{ on = (d[0x37A] &  4) != 0, level = 0 };
+//:C4Random,{159,162,160,161},false,false,false,true,{ on = (d[0x37A] &  8) != 0, level = 0 };
+//:C5Random,{163,166,164,165},false,false,false,true,{ on = (d[0x37A] & 16) != 0, level = 0 };
+//:C6Random,{167,170,168,169},false,false,false,true,{ on = (d[0x37A] & 32) != 0, level = 0 };
+//:C7Random,{171,174,172,173},false,false,false,true,{ on = (d[0x37A] & 64) != 0, level = 0 };
+:MMOpener,{189,7,8,9},false,false,false,false,{ on = true, level = 0xFF };
+:TROpener,{189,7,8,9},false,false,false,false,{ on = true, level = 0xFF };
+:Aghanim12,{193,191,192,190},false,false,false,false,{ on = ((d[0x20*2+1]|d[0x0D*2+1]) & 0x08) != 0, level = ((d[0x20*2+1]&0x08)>>3)|((d[0x0D*2+1]&0x08)>>2) };
+:KS-HPChests,{195,137,135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x11*2+0]&0x10)>>4)+((d[0x11*2+0]&0x20)>>5)+((d[0x11*2+0]&0x40)>>6)+((d[0x32*2+0]&0x10)>>4)+((d[0x55*2+0]&0x10)>>4)+((d[0x71*2+0]&0x10)>>4)+((d[0x72*2+0]&0x10)>>4)+((d[0x80*2+0]&0x10)>>4) };
+:KS-ATChests,{127,126,59},false,false,false,false,{ on = true, level = ((d[0xD0*2+0]&0x10)>>4)+((d[0xE0*2+0]&0x10)>>4) };
+:KS-EPChests,{135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0xA8*2+0]&0x10)>>4)+((d[0xA9*2+0]&0x10)>>4)+((d[0xAA*2+0]&0x10)>>4)+((d[0xB8*2+0]&0x10)>>4)+((d[0xB9*2+0]&0x10)>>4)+((d[0xC8*2+1]&0x08)>>3) };
+:KS-DPChests,{135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x73*2+0]&0x10)>>4)+((d[0x73*2+1]&0x04)>>2)+((d[0x74*2+0]&0x10)>>4)+((d[0x75*2+0]&0x10)>>4)+((d[0x85*2+0]&0x10)>>4)+((d[0x33*2+1]&0x08)>>3) };
+:KS-ToHChests,{135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x27*2+0]&0x10)>>4)+((d[0x27*2+0]&0x20)>>5)+((d[0x77*2+0]&0x10)>>4)+((d[0x87*2+0]&0x10)>>4)+((d[0x87*2+1]&0x04)>>2)+((d[0x07*2+1]&0x08)>>3) };
+:KS-PoDChests,{204,203,202,201,200,199,195,137,135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x09*2+0]&0x10)>>4)+((d[0x0A*2+0]&0x10)>>4)+((d[0x19*2+0]&0x10)>>4)+((d[0x19*2+0]&0x20)>>5)+((d[0x1A*2+0]&0x10)>>4)+((d[0x1A*2+0]&0x20)>>5)+((d[0x1A*2+0]&0x40)>>6)+((d[0x2A*2+0]&0x10)>>4)+((d[0x2A*2+0]&0x20)>>5)+((d[0x2B*2+0]&0x10)>>4)+((d[0x3A*2+0]&0x10)>>4)+((d[0x6A*2+0]&0x10)>>4)+((d[0x6A*2+0]&0x20)>>5)+((d[0x5A*2+1]&0x08)>>3) };
+:KS-SPChests,{200,199,195,137,135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x28*2+0]&0x10)>>4)+((d[0x34*2+0]&0x10)>>4)+((d[0x35*2+0]&0x10)>>4)+((d[0x36*2+0]&0x10)>>4)+((d[0x37*2+0]&0x10)>>4)+((d[0x46*2+0]&0x10)>>4)+((d[0x66*2+0]&0x10)>>4)+((d[0x76*2+0]&0x10)>>4)+((d[0x76*2+0]&0x20)>>5)+((d[0x06*2+1]&0x08)>>3) };
+:KS-SWChests,{195,137,135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x57*2+0]&0x10)>>4)+((d[0x57*2+0]&0x20)>>5)+((d[0x58*2+0]&0x10)>>4)+((d[0x58*2+0]&0x20)>>5)+((d[0x59*2+0]&0x10)>>4)+((d[0x67*2+0]&0x10)>>4)+((d[0x68*2+0]&0x10)>>4)+((d[0x29*2+1]&0x08)>>3) };
+:KS-TTChests,{195,137,135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x44*2+0]&0x10)>>4)+((d[0x45*2+0]&0x10)>>4)+((d[0x65*2+0]&0x10)>>4)+((d[0xCB*2+0]&0x10)>>4)+((d[0xDB*2+0]&0x10)>>4)+((d[0xDB*2+0]&0x20)>>5)+((d[0xDC*2+0]&0x10)>>4)+((d[0xAC*2+1]&0x08)>>3) };
+:KS-IPChests,{195,137,135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x1F*2+0]&0x10)>>4)+((d[0x2E*2+0]&0x10)>>4)+((d[0x3F*2+0]&0x10)>>4)+((d[0x5F*2+0]&0x10)>>4)+((d[0x7E*2+0]&0x10)>>4)+((d[0x9E*2+0]&0x10)>>4)+((d[0xAE*2+0]&0x10)>>4)+((d[0xDE*2+1]&0x08)>>3) };
+:KS-MMChests,{195,137,135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0xA2*2+0]&0x10)>>4)+((d[0xB3*2+0]&0x10)>>4)+((d[0xC1*2+0]&0x10)>>4)+((d[0xC2*2+0]&0x10)>>4)+((d[0xC3*2+0]&0x10)>>4)+((d[0xC3*2+0]&0x20)>>5)+((d[0xD1*2+0]&0x10)>>4)+((d[0x90*2+1]&0x08)>>3) };
+:KS-TRChests,{202,201,200,199,195,137,135,133,131,129,127,126,59},false,false,false,false,{ on = true, level = ((d[0x04*2+0]&0x10)>>4)+((d[0x14*2+0]&0x10)>>4)+((d[0x24*2+0]&0x10)>>4)+((d[0xB6*2+0]&0x10)>>4)+((d[0xB7*2+0]&0x10)>>4)+((d[0xB7*2+0]&0x20)>>5)+((d[0xD5*2+0]&0x10)>>4)+((d[0xD5*2+0]&0x20)>>5)+((d[0xD5*2+0]&0x40)>>6)+((d[0xD5*2+0]&0x80)>>7)+((d[0xD6*2+0]&0x10)>>4)+((d[0xA4*2+1]&0x08)>>3) };
+:KS-HPKeys,{210,205},false,false,false,false,{ on = true, level = (int)(d[0x37D]) }
+:KS-ATKeys,{210,211,206},false,false,false,false,{ on = true, level = (int)d[0x380] }
+:KS-EPKeys,{210,205},false,false,false,false,{ on = true, level = (int)d[0x37E] }
+:KS-DPKeys,{210,205},false,false,false,false,{ on = true, level = (int)d[0x37F] }
+:KS-ToHKeys,{210,205},false,false,false,false,{ on = true, level = (int)d[0x386] }
+:KS-PoDKeys,{210,211,212,213,214,215,209},false,false,false,false,{ on = true, level = (int)d[0x382] }
+:KS-SPKeys,{210,205},false,false,false,false,{ on = true, level = (int)d[0x381] }
+:KS-SWKeys,{210,211,206},false,false,false,false,{ on = true, level = (int)d[0x384] }
+:KS-TTKeys,{210,205},false,false,false,false,{ on = true, level = (int)d[0x387] }
+:KS-IPKeys,{210,211,206},false,false,false,false,{ on = true, level = (int)d[0x385] }
+:KS-MMKeys,{210,211,212,207},false,false,false,false,{ on = true, level = (int)d[0x383] }
+:KS-TRKeys,{210,211,212,213,208},false,false,false,false,{ on = true, level = (int)d[0x388] }
+:KS-GTKeys,{210,211,212,213,208},false,false,false,false,{ on = true, level = (int)d[0x389] }
+:KS-EPBigKey,{198},false,false,false,false,{ on = (d[0x367] & 32) != 0, level = 0 };
+:KS-DPBigKey,{198},false,false,false,false,{ on = (d[0x367] & 16) != 0, level = 0 };
+:KS-ToHBigKey,{198},false,false,false,false,{ on = (d[0x366] & 32) != 0, level = 0 };
+:KS-PoDBigKey,{198},false,false,false,false,{ on = (d[0x367] & 2) != 0, level = 0 };
+:KS-SPBigKey,{198},false,false,false,false,{ on = (d[0x367] & 4) != 0, level = 0 };
+:KS-SWBigKey,{198},false,false,false,false,{ on = (d[0x366] & 128) != 0, level = 0 };
+:KS-TTBigKey,{198},false,false,false,false,{ on = (d[0x366] & 16) != 0, level = 0 };
+:KS-IPBigKey,{198},false,false,false,false,{ on = (d[0x366] & 64) != 0, level = 0 };
+:KS-MMBigKey,{198},false,false,false,false,{ on = (d[0x367] & 1) != 0, level = 0 };
+:KS-TRBigKey,{198},false,false,false,false,{ on = (d[0x366] & 8) != 0, level = 0 };
+:KS-GTBigKey,{198},false,false,false,false,{ on = (d[0x366] & 4) != 0, level = 0 };
+:Ganon,{217},false,false,false,false,{ on = (d[0x401] !=0xFF || d[0x402] !=0xFF), level = 0 };
+:EmptyChest,{59},false,false,false,false,{ on = true, level = 0xFF };
+:BallandChain,{218},false,false,false,false,{ on = (d[0x80*2+0]&0x20) != 0, level = 0 }

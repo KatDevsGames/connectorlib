@@ -1,0 +1,9 @@
+1.02
+- Removed Uncle from HP chest count for Open/Standard layout
+- Lowered Keysanity SW key and chest count to account for the static key
+
+1.01
+- Removed Uncle from HP chest count
+
+1.0
+- Initial release

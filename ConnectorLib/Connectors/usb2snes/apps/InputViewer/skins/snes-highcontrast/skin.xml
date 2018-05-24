@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin name="High-contrast" author="Enmet" type="snes">
+
+    <background name="Green" image="sfcpad.png" />
+
+    <button name="a" image="dot.png" x="200" y="60" width="20" height="20" />
+    <button name="b" image="dot.png" x="180" y="80" width="20" height="20" />
+    <button name="x" image="dot.png" x="180" y="40" width="20" height="20" />
+    <button name="y" image="dot.png" x="160" y="60" width="20" height="20" />
+
+    <button name="l" image="dot.png" x="20" y="0" width="20" height="20" />
+    <button name="r" image="dot.png" x="180" y="0" width="20" height="20" />
+
+    <button name="start" image="dot.png" x="120" y="60" width="20" height="20" />
+    <button name="select" image="dot.png" x="80" y="60" width="20" height="20" />
+
+    <button name="up" image="dot.png" x="20" y="40" width="20" height="20" />
+    <button name="down" image="dot.png" x="20" y="80" width="20" height="20" />
+    <button name="left" image="dot.png" x="0" y="60" width="20" height="20" />
+    <button name="right" image="dot.png" x="40" y="60" width="20" height="20" />
+
+    <background name="Blue" image="sfcpad2.png" />
+
+    <button name="a" image="dot2.png" x="200" y="60" width="20" height="20" />
+    <button name="b" image="dot2.png" x="180" y="80" width="20" height="20" />
+    <button name="x" image="dot2.png" x="180" y="40" width="20" height="20" />
+    <button name="y" image="dot2.png" x="160" y="60" width="20" height="20" />
+
+    <button name="l" image="dot2.png" x="20" y="0" width="20" height="20" />
+    <button name="r" image="dot2.png" x="180" y="0" width="20" height="20" />
+
+    <button name="start" image="dot2.png" x="120" y="60" width="20" height="20" />
+    <button name="select" image="dot2.png" x="80" y="60" width="20" height="20" />
+
+    <button name="up" image="dot2.png" x="20" y="40" width="20" height="20" />
+    <button name="down" image="dot2.png" x="20" y="80" width="20" height="20" />
+    <button name="left" image="dot2.png" x="0" y="60" width="20" height="20" />
+    <button name="right" image="dot2.png" x="40" y="60" width="20" height="20" />
+
+    <background name="Purple" image="sfcpad3.png" />
+
+    <button name="a" image="dot4.png" x="200" y="60" width="20" height="20" />
+    <button name="b" image="dot4.png" x="180" y="80" width="20" height="20" />
+    <button name="x" image="dot4.png" x="180" y="40" width="20" height="20" />
+    <button name="y" image="dot4.png" x="160" y="60" width="20" height="20" />
+
+    <button name="l" image="dot4.png" x="20" y="0" width="20" height="20" />
+    <button name="r" image="dot4.png" x="180" y="0" width="20" height="20" />
+
+    <button name="start" image="dot4.png" x="120" y="60" width="20" height="20" />
+    <button name="select" image="dot4.png" x="80" y="60" width="20" height="20" />
+
+    <button name="up" image="dot4.png" x="20" y="40" width="20" height="20" />
+    <button name="down" image="dot4.png" x="20" y="80" width="20" height="20" />
+    <button name="left" image="dot4.png" x="0" y="60" width="20" height="20" />
+    <button name="right" image="dot4.png" x="40" y="60" width="20" height="20" />
+
+</skin>

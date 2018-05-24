@@ -17,8 +17,61 @@ using System.Web.Script.Serialization;
 
 namespace ConnectorLib
 {
+    public class sd2snesBatchWriteContext : IBatchWriteContext
+    {
+        sd2snesConnector mOwner;
+
+        public sd2snesBatchWriteContext(sd2snesConnector owner)
+        {
+            mOwner = owner;
+        }
+
+        public struct BatchWriteEntry
+        {
+            public uint address;
+            public byte[] data;
+
+            public BatchWriteEntry(uint _address, byte[] _data)
+            {
+                address = _address;
+                data = new byte[_data.Length];
+                _data.CopyTo(data, 0);
+            }
+        }
+
+        public List<BatchWriteEntry> BatchWriteEntries = new List<BatchWriteEntry>();
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: Perform writes here
+                    mOwner.TransmitBatchWrites();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
+
+    }
+
     public class sd2snesConnector : ISNESConnector
     {
+        private Object mTransmitLock = new Object();
+
         [CanBeNull] private readonly Action<string> mMessageProcessor;
 
 #if USE_WEBSOCKET
@@ -99,6 +152,7 @@ namespace ConnectorLib
 #if USE_WEBSOCKET
                 Disconnect();
 
+                // ReSharper disable once UseObjectOrCollectionInitializer
                 mSocket = new WebSocket("ws://localhost:8080");
                 mSocket.Log.Output = (data, message) =>
                 {
@@ -216,12 +270,42 @@ namespace ConnectorLib
             handler?.Invoke(e);
         }
 
+        private bool MapAddressInRange(uint address, uint srcRangeBegin, uint srcRangeEnd, uint dstRangeBegin, out uint mappedAddress)
+        {
+            if (address >= srcRangeBegin && address <= srcRangeEnd)
+            {
+                mappedAddress = (address - srcRangeBegin) + dstRangeBegin;
+                return true;
+            }
+
+            mappedAddress = 0;
+            return false;
+        }
+
         //  Pre-process the address to map into SD2SNES space
         private uint TranslateAddress(uint address)
         {
+            uint translatedAddress;
+
             //  WRAM
-            if (address >= 0x7E0000 && address <= 0x7FFFFF)
-                return (address - 0x7E0000) + 0xF50000;
+            if (MapAddressInRange(address, 0x7E0000u, 0x7FFFFFu, 0xF50000u, out translatedAddress))
+                return translatedAddress;
+
+            //  ROM Segments
+            for (uint i = 0u; i < 0x3Fu; i++)
+            {
+                if (MapAddressInRange(address, (i * 0x010000u) + 0x8000u, (i * 0x010000u) + 0xFFFFu, (i * 0x8000u), out translatedAddress))
+                    return translatedAddress;
+                if (MapAddressInRange(address, (i * 0x010000u) + 0x808000u, (i * 0x010000u) + 0x80FFFFu, (i * 0x8000u), out translatedAddress))
+                    return translatedAddress;
+            }
+
+            //  SRAM Segments
+            for (uint i = 0u; i < 8u; i++)
+            {
+                if (MapAddressInRange(address, 0x700000u + (i * 0x010000u), 0x707FFF + (i * 0x010000u), 0xE00000 + (i * 0x8000), out translatedAddress))
+                    return translatedAddress;
+            }
 
             return address;
         }
@@ -244,150 +328,294 @@ namespace ConnectorLib
                 {
                     //uint formattedAddress = TranslateAddress(address);
 
-                    RequestType req = new RequestType
+                    using (ManualResetEvent readEvent = new ManualResetEvent(false))
                     {
-                        Opcode = OpcodeType.GetAddress.ToString(),
-                        Space = "SNES",
-                        Operands = new List<string>(new [] {TranslateAddress(address).ToString("X"), buffer.Length.ToString("X")})
-                    };
-
-                    SetPendingMessageHandler(e =>
-                    {
-                        try
+                        lock (mTransmitLock)
                         {
-                            if (e.IsBinary && e.RawData != null)
+                            RequestType req = new RequestType
                             {
-                                for (int i = 0; i < buffer.Length; ++i)
+                                Opcode = OpcodeType.GetAddress.ToString(),
+                                Space = "SNES",
+                                Operands = new List<string>(new[] { TranslateAddress(address).ToString("X"), buffer.Length.ToString("X") })
+                            };
+
+                            SetPendingMessageHandler(e =>
+                            {
+                                try
                                 {
-                                    buffer[i] = e.RawData[Math.Min(i, e.RawData.Length - 1)];
+                                    if (e.IsBinary && e.RawData != null)
+                                    {
+                                        for (int i = 0; i < buffer.Length; ++i)
+                                        {
+                                            buffer[i] = e.RawData[Math.Min(i, e.RawData.Length - 1)];
+                                        }
+
+                                        bSuccess = true;
+                                    }
                                 }
+                                catch { }
+                                finally
+                                {
+                                    readEvent.Set();
+                                }
+                            });
 
-                                bSuccess = true;
-                            }
+                            mSocket.Send(mSerializer.Serialize(req));
+                            readEvent.WaitOne();
+                            readEvent.Reset();
                         }
-                        catch { }
-                        finally
-                        {
-                            mMemoryReadEvent.Set();
-                        }
-                    });
-
-                    mSocket.Send(mSerializer.Serialize(req));
-                    mMemoryReadEvent.WaitOne();
-                    mMemoryReadEvent.Reset();
+                    }
                 }
                 catch { }
 #else
-            if (mSNES == null)
-                return false;
-
-            try
-            {
-                Array.Clear(mReadBuffer, 0, READ_BUFFER_SIZE);
-
-                int resultLength = (int)mSNES.SendCommand(usbint_server_opcode_e.GET, usbint_server_space_e.SNES, usbint_server_flags_e.NONE, TranslateAddress(address), (uint)buffer.Length);
-                mSNES.GetData(buffer, 0, resultLength);
-
-                Output("Successfully read bytes");
-                return true;
-            }
-            catch (Exception e)
-            {
-                Output("ReadBytes threw an exception: {0}", e);
-            }
-#endif
-            }
-            return bSuccess;
-        }
-
-        private bool WriteBytes(uint address, [CanBeNull] byte[] data)
-        {
-#if USE_WEBSOCKET
-            bool bSuccess = false;
-
-            while (!bSuccess)
-            {
-                ConnectIfNecessary();
-
-                if (!Connected)
-                    continue;
+                if (mSNES == null)
+                    return false;
 
                 try
                 {
-                    //  To write memory and have it "stick" on the SNES, we need to actually build a little function that will refresh the memory properly
-                    //  This assumes we are writing exclusively to WRAM
+                    Array.Clear(mReadBuffer, 0, READ_BUFFER_SIZE);
 
-                    // setup new command
-                    // ReSharper disable once UseObjectOrCollectionInitializer
-                    List<byte> cmd = new List<byte>();
+                    int resultLength = (int)mSNES.SendCommand(usbint_server_opcode_e.GET, usbint_server_space_e.SNES, usbint_server_flags_e.NONE, TranslateAddress(address), (uint)buffer.Length);
+                    mSNES.GetData(buffer, 0, resultLength);
 
-                    // PHP
-                    cmd.Add(0x08);
-                    // SEP #20
-                    cmd.Add(0xE2);
-                    cmd.Add(0x20);
-                    // PHA
-                    cmd.Add(0x48);
-                    // XBA
-                    cmd.Add(0xEB);
-                    // PHA
-                    cmd.Add(0x48);
-
-                    for (uint i = 0; i < data.Length; ++i)
-                    {
-                        uint elementAddress = address + i;
-
-                        // LDA.l #data[index]
-                        cmd.Add(0xA9);
-                        cmd.Add(data[i]);
-                        // STA.l $address+i
-                        cmd.Add(0x8F);
-                        cmd.Add(Convert.ToByte((elementAddress >> 0) & 0xFF));
-                        cmd.Add(Convert.ToByte((elementAddress >> 8) & 0xFF));
-                        cmd.Add(Convert.ToByte((elementAddress >> 16) & 0xFF));
-                    }
-
-                    // LDA #$00
-                    cmd.Add(0xA9);
-                    cmd.Add(0x00);
-                    // STA.l $002C00
-                    cmd.Add(0x8F);
-                    cmd.Add(0x00);
-                    cmd.Add(0x2C);
-                    cmd.Add(0x00);
-                    // PLA
-                    cmd.Add(0x68);
-                    // XBA
-                    cmd.Add(0xEB);
-                    // PLA
-                    cmd.Add(0x68);
-                    // PLP
-                    cmd.Add(0x28);
-                    // JMP ($FFEA)
-                    cmd.Add(0x6C);
-                    cmd.Add(0xEA);
-                    cmd.Add(0xFF);
-
-                    RequestType req = new RequestType { Opcode = OpcodeType.PutAddress.ToString(), Space = "CMD", Operands = new List<string>(new string[] { 0x002C00.ToString("X"), cmd.Count.ToString("X"), 0x002C00.ToString("X"), 1.ToString("X") }) };
-                    // Perform first byte last
-                    cmd.Add(cmd[0]);
-                    cmd[0] = 0x0;
-                    mSocket.Send(mSerializer.Serialize(req));
-                    mSocket.Send(cmd.ToArray());
-
-                    RequestType shadowReq = new RequestType
-                    {
-                        Opcode = OpcodeType.PutAddress.ToString(),
-                        Space = "SNES",
-                        Operands = new List<string>(new[] { TranslateAddress(address).ToString("X"), data.Length.ToString("X") })
-                    };
-
-                    mSocket.Send(mSerializer.Serialize(shadowReq));
-                    mSocket.Send(data);
-
-                    bSuccess = true;
+                    Output("Successfully read bytes");
+                    return true;
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    Output("ReadBytes threw an exception: {0}", e);
+                }
+#endif
+            }
+
+            return bSuccess;
+        }
+
+        #region Batch Write Support
+
+        ThreadLocal<sd2snesBatchWriteContext> mActiveBatchWriteContext = new ThreadLocal<sd2snesBatchWriteContext>();
+
+        internal void TransmitBatchWrites()
+        {
+            bool bSuccess = false;
+
+            lock (mTransmitLock)
+            {
+                try
+                {
+                    sd2snesBatchWriteContext activeContext = mActiveBatchWriteContext.Value;
+                    if (activeContext == null || activeContext.BatchWriteEntries.Count == 0)
+                        return;
+
+                    while (!bSuccess)
+                    {
+                        ConnectIfNecessary();
+
+                        if (!Connected)
+                            continue;
+
+                        try
+                        {
+                            //  To write memory and have it "stick" on the SNES, we need to actually build a little function that will refresh the memory properly
+                            //  This assumes we are writing exclusively to WRAM
+
+                            // setup new command
+                            // ReSharper disable once UseObjectOrCollectionInitializer
+                            List<byte> cmd = new List<byte>();
+
+                            // PHP
+                            cmd.Add(0x08);
+                            // SEP #20
+                            cmd.Add(0xE2);
+                            cmd.Add(0x20);
+                            // PHA
+                            cmd.Add(0x48);
+                            // XBA
+                            cmd.Add(0xEB);
+                            // PHA
+                            cmd.Add(0x48);
+
+                            foreach (sd2snesBatchWriteContext.BatchWriteEntry entry in activeContext.BatchWriteEntries)
+                            {
+                                for (uint i = 0; i < entry.data.Length; ++i)
+                                {
+                                    uint elementAddress = entry.address + i;
+
+                                    // LDA.l #data[index]
+                                    cmd.Add(0xA9);
+                                    cmd.Add(entry.data[i]);
+                                    // STA.l $address+i
+                                    cmd.Add(0x8F);
+                                    cmd.Add(Convert.ToByte((elementAddress >> 0) & 0xFF));
+                                    cmd.Add(Convert.ToByte((elementAddress >> 8) & 0xFF));
+                                    cmd.Add(Convert.ToByte((elementAddress >> 16) & 0xFF));
+                                }
+                            }
+
+                            // LDA #$00
+                            cmd.Add(0xA9);
+                            cmd.Add(0x00);
+                            // STA.l $002C00
+                            cmd.Add(0x8F);
+                            cmd.Add(0x00);
+                            cmd.Add(0x2C);
+                            cmd.Add(0x00);
+                            // PLA
+                            cmd.Add(0x68);
+                            // XBA
+                            cmd.Add(0xEB);
+                            // PLA
+                            cmd.Add(0x68);
+                            // PLP
+                            cmd.Add(0x28);
+                            // JMP ($FFEA)
+                            cmd.Add(0x6C);
+                            cmd.Add(0xEA);
+                            cmd.Add(0xFF);
+
+                            RequestType req = new RequestType { Opcode = OpcodeType.PutAddress.ToString(), Space = "CMD", Operands = new List<string>(new string[] { 0x002C00.ToString("X"), cmd.Count.ToString("X"), 0x002C00.ToString("X"), 1.ToString("X") }) };
+                            // Perform first byte last
+                            cmd.Add(cmd[0]);
+                            cmd[0] = 0x0;
+                            mSocket.Send(mSerializer.Serialize(req));
+                            mSocket.Send(cmd.ToArray());
+
+                            foreach (sd2snesBatchWriteContext.BatchWriteEntry entry in activeContext.BatchWriteEntries)
+                            {
+                                RequestType shadowReq = new RequestType
+                                {
+                                    Opcode = OpcodeType.PutAddress.ToString(),
+                                    Space = "SNES",
+                                    Operands = new List<string>(new[] { TranslateAddress(entry.address).ToString("X"), entry.data.Length.ToString("X") })
+                                };
+
+                                mSocket.Send(mSerializer.Serialize(shadowReq));
+                                mSocket.Send(entry.data);
+                            }
+
+                            bSuccess = true;
+                        }
+                        catch { }
+                    }
+                }
+                finally
+                {
+                    mActiveBatchWriteContext.Value = null;
+                }
+            }
+        }
+
+        public IBatchWriteContext OpenBatchWriteContext()
+        {
+            lock (mTransmitLock)
+            {
+                Debug.Assert(mActiveBatchWriteContext.Value == null, "Attempting to open a batch write context while a context is already active for the current thread.");
+                if (mActiveBatchWriteContext.Value != null)
+                    return mActiveBatchWriteContext.Value;
+
+                mActiveBatchWriteContext.Value = new sd2snesBatchWriteContext(this);
+                return mActiveBatchWriteContext.Value;
+            }
+        }
+        #endregion
+
+        private bool WriteBytes(uint address, [CanBeNull] byte[] data)
+        {
+            if (mActiveBatchWriteContext.Value != null && data != null && data.Length > 0)
+            {
+                mActiveBatchWriteContext.Value.BatchWriteEntries.Add(new sd2snesBatchWriteContext.BatchWriteEntry(address, data));
+                return true;
+            }
+
+#if USE_WEBSOCKET
+            bool bSuccess = false;
+
+            lock (mTransmitLock)
+            {
+                while (!bSuccess)
+                {
+                    ConnectIfNecessary();
+
+                    if (!Connected)
+                        continue;
+
+                    try
+                    {
+                        //  To write memory and have it "stick" on the SNES, we need to actually build a little function that will refresh the memory properly
+                        //  This assumes we are writing exclusively to WRAM
+
+                        // setup new command
+                        // ReSharper disable once UseObjectOrCollectionInitializer
+                        List<byte> cmd = new List<byte>();
+
+                        // PHP
+                        cmd.Add(0x08);
+                        // SEP #20
+                        cmd.Add(0xE2);
+                        cmd.Add(0x20);
+                        // PHA
+                        cmd.Add(0x48);
+                        // XBA
+                        cmd.Add(0xEB);
+                        // PHA
+                        cmd.Add(0x48);
+
+                        for (uint i = 0; i < data.Length; ++i)
+                        {
+                            uint elementAddress = address + i;
+
+                            // LDA.l #data[index]
+                            cmd.Add(0xA9);
+                            cmd.Add(data[i]);
+                            // STA.l $address+i
+                            cmd.Add(0x8F);
+                            cmd.Add(Convert.ToByte((elementAddress >> 0) & 0xFF));
+                            cmd.Add(Convert.ToByte((elementAddress >> 8) & 0xFF));
+                            cmd.Add(Convert.ToByte((elementAddress >> 16) & 0xFF));
+                        }
+
+                        // LDA #$00
+                        cmd.Add(0xA9);
+                        cmd.Add(0x00);
+                        // STA.l $002C00
+                        cmd.Add(0x8F);
+                        cmd.Add(0x00);
+                        cmd.Add(0x2C);
+                        cmd.Add(0x00);
+                        // PLA
+                        cmd.Add(0x68);
+                        // XBA
+                        cmd.Add(0xEB);
+                        // PLA
+                        cmd.Add(0x68);
+                        // PLP
+                        cmd.Add(0x28);
+                        // JMP ($FFEA)
+                        cmd.Add(0x6C);
+                        cmd.Add(0xEA);
+                        cmd.Add(0xFF);
+
+                        RequestType req = new RequestType { Opcode = OpcodeType.PutAddress.ToString(), Space = "CMD", Operands = new List<string>(new string[] { 0x002C00.ToString("X"), cmd.Count.ToString("X"), 0x002C00.ToString("X"), 1.ToString("X") }) };
+                        // Perform first byte last
+                        cmd.Add(cmd[0]);
+                        cmd[0] = 0x0;
+                        mSocket.Send(mSerializer.Serialize(req));
+                        mSocket.Send(cmd.ToArray());
+
+                        RequestType shadowReq = new RequestType
+                        {
+                            Opcode = OpcodeType.PutAddress.ToString(),
+                            Space = "SNES",
+                            Operands = new List<string>(new[] { TranslateAddress(address).ToString("X"), data.Length.ToString("X") })
+                        };
+
+                        mSocket.Send(mSerializer.Serialize(shadowReq));
+                        mSocket.Send(data);
+
+                        bSuccess = true;
+                    }
+                    catch { }
+                }
             }
 #else
             ConnectIfNecessary();
@@ -479,25 +707,27 @@ namespace ConnectorLib
 
         public byte? ReadByte(uint address)
         {
+            Output($"sd2snesConnector is reading a byte: [${address:X6}]");
             byte[] buffer = new byte[1];
             if (ReadBytes(address, buffer))
             {
                 return buffer[0];
             }
 
-            Output("Failed to read byte at address {0:x}", address);
+            Output($"sd2snesConnector failed to read a byte: [${address:X6}]");
             return null;
         }
 
         public ushort? ReadWord(uint address)
         {
+            Output($"sd2snesConnector is reading a word: [${address:X6}]");
             byte[] buffer = new byte[2];
             if (ReadBytes(address, buffer))
             {
                 return (ushort) (((ushort) buffer[1] << 8) | (ushort) buffer[0]);
             }
 
-            Output("Failed to read word at address {0:x}", address);
+            Output($"sd2snesConnector failed to read a word: [${address:X6}]");
             return null;
         }
 
@@ -571,6 +801,7 @@ namespace ConnectorLib
 
         public bool SetBit(uint address, byte value)
         {
+            Output($"sd2snesConnector is setting a bit: [${address:X6} = #${value:X2}]");
 #if USE_WEBSOCKET
             bool bSuccess = false;
 
@@ -668,6 +899,7 @@ namespace ConnectorLib
 
         public bool UnsetBit(uint address, byte value)
         {
+            Output($"sd2snesConnector is clearing a bit: [${address:X6} = #${value:X2}]");
 #if USE_WEBSOCKET
 
             bool bSuccess = false;
@@ -764,26 +996,37 @@ namespace ConnectorLib
                 return bSuccess; //is bSuccess ever not true? - should this be inside a precompiler directive?
         }
 
+        [NotNull]
+        private readonly object writelock = new object();
         public bool WriteByte(uint address, byte value)
         {
-            byte[] buffer = {value};
+            Output($"sd2snesConnector is writing a byte: [${address:X6} = #${value:X2}]");
+            lock (writelock)
+            {
+                Thread.Sleep(25);
+                byte[] buffer = {value};
 
-            if (WriteBytes(address, buffer))
-                return true;
+                if (WriteBytes(address, buffer))
+                    return true;
 
-            Output("Failed to write byte at address {0:x}", address);
-            return false;
+                Output($"sd2snesConnector failed to write a byte: [${address:X6} = #${value:X2}]");
+                return false;
+            }
         }
 
         public bool WriteWord(uint address, ushort value)
         {
-            byte[] buffer = {(byte) (value % 0x100), (byte) (value / 0x100)};
+            Output($"sd2snesConnector is writing a word: [${address:X6} = #${value:X4}]");
+            lock (writelock)
+            {
+                byte[] buffer = {(byte) (value % 0x100), (byte) (value / 0x100)};
 
-            if (WriteBytes(address, buffer))
-                return true;
+                if (WriteBytes(address, buffer))
+                    return true;
 
-            Output("Failed to write word at address {0:x}", address);
-            return false;
+                Output($"sd2snesConnector failed to write a word: [${address:X6} = #${value:X4}]");
+                return false;
+            }
         }
     }
 }

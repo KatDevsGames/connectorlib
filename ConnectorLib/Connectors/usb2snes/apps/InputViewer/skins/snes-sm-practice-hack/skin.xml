@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin name="Super Metroid Practice Hack" author="Enmet" type="snes">
+
+    <background name="InfoHud Default" image="1hud.png" />
+
+    <button name="a" image="1a.png" x="64" y="16" width="16" height="16" />
+    <button name="b" image="1b.png" x="48" y="16" width="16" height="16" />
+    <button name="x" image="1x.png" x="64" y="0" width="16" height="16" />
+    <button name="y" image="1y.png" x="48" y="0" width="16" height="16" />
+
+    <button name="l" image="1l.png" x="0" y="0" width="16" height="16" />
+    <button name="r" image="1r.png" x="32" y="0" width="16" height="16" />
+
+    <button name="start" image="1st.png" x="80" y="16" width="16" height="14" />
+    <button name="select" image="1sl.png" x="80" y="0" width="16" height="14" />
+
+    <button name="up" image="1up.png" x="16" y="0" width="16" height="16" />
+    <button name="down" image="1down.png" x="16" y="16" width="16" height="16" />
+    <button name="left" image="1left.png" x="0" y="16" width="16" height="16" />
+    <button name="right" image="1right.png" x="32" y="16" width="16" height="16" />
+	
+	<background name="InfoHud (Chroma Green)" image="2hud.png" />
+
+    <button name="a" image="2a.png" x="64" y="16" width="16" height="16" />
+    <button name="b" image="2b.png" x="48" y="16" width="16" height="16" />
+    <button name="x" image="2x.png" x="64" y="0" width="16" height="16" />
+    <button name="y" image="2y.png" x="48" y="0" width="16" height="16" />
+
+    <button name="l" image="2l.png" x="0" y="0" width="16" height="16" />
+    <button name="r" image="2r.png" x="32" y="0" width="16" height="16" />
+
+    <button name="start" image="2st.png" x="80" y="16" width="16" height="14" />
+    <button name="select" image="2sl.png" x="80" y="0" width="16" height="14" />
+
+    <button name="up" image="2up.png" x="16" y="0" width="16" height="16" />
+    <button name="down" image="2down.png" x="16" y="16" width="16" height="16" />
+    <button name="left" image="2left.png" x="0" y="16" width="16" height="16" />
+    <button name="right" image="2right.png" x="32" y="16" width="16" height="16" />
+	
+	<background name="InfoHud (Chroma Dark-Blue)" image="3hud.png" />
+
+    <button name="a" image="3a.png" x="64" y="16" width="16" height="16" />
+    <button name="b" image="3b.png" x="48" y="16" width="16" height="16" />
+    <button name="x" image="3x.png" x="64" y="0" width="16" height="16" />
+    <button name="y" image="3y.png" x="48" y="0" width="16" height="16" />
+
+    <button name="l" image="3l.png" x="0" y="0" width="16" height="16" />
+    <button name="r" image="3r.png" x="32" y="0" width="16" height="16" />
+
+    <button name="start" image="3st.png" x="80" y="16" width="16" height="14" />
+    <button name="select" image="3sl.png" x="80" y="0" width="16" height="14" />
+
+    <button name="up" image="3up.png" x="16" y="0" width="16" height="16" />
+    <button name="down" image="3down.png" x="16" y="16" width="16" height="16" />
+    <button name="left" image="3left.png" x="0" y="16" width="16" height="16" />
+    <button name="right" image="3right.png" x="32" y="16" width="16" height="16" />
+
+</skin>

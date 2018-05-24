@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin name="High-contrast (Mini)" author="Enmet" type="snes">
+
+    <background name="Default" image="sfcpad.png" />
+
+    <button name="a" image="dot.png" x="11" y="4" width="1" height="1" />
+    <button name="b" image="dot.png" x="10" y="5" width="1" height="1" />
+    <button name="x" image="dot.png" x="10" y="3" width="1" height="1" />
+    <button name="y" image="dot.png" x="9" y="4" width="1" height="1" />
+
+    <button name="l" image="dot.png" x="2" y="1" width="1" height="1" />
+    <button name="r" image="dot.png" x="10" y="1" width="1" height="1" />
+
+    <button name="start" image="dot.png" x="7" y="4" width="1" height="1" />
+    <button name="select" image="dot.png" x="5" y="4" width="1" height="1" />
+
+    <button name="up" image="dot.png" x="2" y="3" width="1" height="1" />
+    <button name="down" image="dot.png" x="2" y="5" width="1" height="1" />
+    <button name="left" image="dot.png" x="1" y="4" width="1" height="1" />
+    <button name="right" image="dot.png" x="3" y="4" width="1" height="1" />
+
+</skin>

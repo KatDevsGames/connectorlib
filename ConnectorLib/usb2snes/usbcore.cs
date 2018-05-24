@@ -173,13 +173,13 @@ namespace ConnectorLib.usb2snes
                     case usbint_server_opcode_e.BOOT:
                     {
                         // name
-                        if (args[0] == null || !(args[0] is string)) throw new Exception("Command: " + opcode.ToString() + " missing arg[0] string");
+                        if (!(args[0] is string)) throw new Exception("Command: " + opcode + " missing arg[0] string");
                         string s = (string)args[0];
                         Buffer.BlockCopy(Encoding.ASCII.GetBytes(s.ToArray()), 0, tBuffer, 256, Math.Min(255, s.Length));
 
                         if (opcode == usbint_server_opcode_e.MV)
                         {
-                            if (args[1] == null || !(args[1] is string)) throw new Exception("Command: " + opcode.ToString() + " missing arg[1] string");
+                            if (!(args[1] is string)) throw new Exception("Command: " + opcode + " missing arg[1] string");
                             // new name
                             string n = (string)args[1];
                             Buffer.BlockCopy(Encoding.ASCII.GetBytes(n.ToArray()), 0, tBuffer, 8, n.Length);
@@ -187,7 +187,7 @@ namespace ConnectorLib.usb2snes
                         else if (opcode == usbint_server_opcode_e.PUT)
                         {
                             // size
-                            if (args[1] == null || !(args[1] is uint)) throw new Exception("Command: " + opcode.ToString() + " missing arg[1] uint");
+                            if (!(args[1] is uint)) throw new Exception("Command: " + opcode + " missing arg[1] uint");
                             uint size = (uint)args[1];
                             tBuffer[252] = Convert.ToByte((size >> 24) & 0xFF);
                             tBuffer[253] = Convert.ToByte((size >> 16) & 0xFF);
@@ -215,7 +215,7 @@ namespace ConnectorLib.usb2snes
                     //case usbint_server_opcode_e.TIME:
 
                     default:
-                        throw new Exception("Unhandled Command: " + opcode.ToString() + " space: " + space.ToString() + " flags: " + flags.ToString());
+                        throw new Exception("Unhandled Command: " + opcode + " space: " + space + " flags: " + flags);
                 }
             }
             else
@@ -226,7 +226,7 @@ namespace ConnectorLib.usb2snes
                     case usbint_server_opcode_e.PUT:
                     {
                         // offset
-                        if (args[0] == null || !(args[0] is uint)) throw new Exception("Command: " + opcode.ToString() + " missing arg[0] uint");
+                        if (!(args[0] is uint)) throw new Exception("Command: " + opcode + " missing arg[0] uint");
                         uint offset = (uint)args[0];
                         tBuffer[256] = Convert.ToByte((offset >> 24) & 0xFF);
                         tBuffer[257] = Convert.ToByte((offset >> 16) & 0xFF);
@@ -234,7 +234,7 @@ namespace ConnectorLib.usb2snes
                         tBuffer[259] = Convert.ToByte((offset >> 0) & 0xFF);
 
                         // size
-                        if (args[1] == null || !(args[1] is uint)) throw new Exception("Command: " + opcode.ToString() + " missing arg[1] uint");
+                        if (!(args[1] is uint)) throw new Exception("Command: " + opcode + " missing arg[1] uint");
                         uint size = (uint)args[1];
                         tBuffer[252] = Convert.ToByte((size >> 24) & 0xFF);
                         tBuffer[253] = Convert.ToByte((size >> 16) & 0xFF);
@@ -246,7 +246,7 @@ namespace ConnectorLib.usb2snes
                     case usbint_server_opcode_e.VGET:
                     case usbint_server_opcode_e.VPUT:
                     {
-                        if (args.Length == 0 || args.Length > 8) throw new Exception("Command: " + opcode.ToString() + " need 2 <= args <= 16 and a multiple of 2.  Format: (size0, offset0), ...");
+                        if (args.Length == 0 || args.Length > 8) throw new Exception("Command: " + opcode + " need 2 <= args <= 16 and a multiple of 2.  Format: (size0, offset0), ...");
                         uint i = 0;
                         foreach (object a in args) {
                             Tuple<int, int> t = (Tuple<int, int>)a;
@@ -270,7 +270,7 @@ namespace ConnectorLib.usb2snes
                         break;
 
                     default:
-                        throw new Exception("Unhandled Request: " + opcode.ToString() + " space: " + space.ToString() + " flags: " + flags.ToString());
+                        throw new Exception("Unhandled Request: " + opcode + " space: " + space + " flags: " + flags);
                 }
             }
 
@@ -284,7 +284,7 @@ namespace ConnectorLib.usb2snes
                 Array.Clear(tBuffer, 0, tBuffer.Length);
                 while (curSize < 512) curSize += serialPort.Read(tBuffer, (curSize % 512), 512 - (curSize % 512));
                 if (tBuffer[0] != 'U' || tBuffer[1] != 'S' || tBuffer[2] != 'B' || tBuffer[3] != 'A' || tBuffer[4] != Convert.ToByte(usbint_server_opcode_e.RESPONSE) || tBuffer[5] == 1)
-                    throw new Exception("Response Error Request: " + opcode.ToString() + " space: " + space.ToString() + " flags: " + flags.ToString() + " Response: " + tBuffer[4].ToString());
+                    throw new Exception("Response Error Request: " + opcode + " space: " + space + " flags: " + flags + " Response: " + tBuffer[4]);
             }
 
             // handle response

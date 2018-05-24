@@ -1,3 +1,10 @@
+v7
+--
+Added checkbox in FileViewer to show all local files.
+Fixed bug with non-base type ROMs loading back into the menu causing game crashes when NMI hooks are enabled.
+Fixed bug where USB accesses timeout in the System Information menu.
+Added option to disable com port filtering.  Experimental and may lead to apps crashing.
+
 v6
 --
 (6.1) Removed verbose logging by default.  Reduced total log file size.
