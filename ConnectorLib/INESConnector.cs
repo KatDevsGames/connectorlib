@@ -20,52 +20,37 @@ namespace ConnectorLib
     /// <summary>
     /// Provides an interface for SNES connector objects to implement.
     /// </summary>
-    public interface ISNESConnector : IGameConnector
+    public interface INESConnector : IGameConnector
     {
         /// <summary>
-        /// Writes a byte to the SNES.
+        /// Writes a byte to the NES.
         /// </summary>
-        /// <param name="address">The 24-bit SNES bus address.</param>
+        /// <param name="address">The 16-bit NES bus address.</param>
         /// <param name="value">The value to be written.</param>
         /// <returns>True if the write was successful, otherwise false.</returns>
-        bool WriteByte(uint address, byte value);
+        bool WriteByte(ushort address, byte value);
 
         /// <summary>
-        /// Writes an usigned short to the SNES.
+        /// Reads a byte from the NES.
         /// </summary>
-        /// <param name="address">The 24-bit SNES bus address.</param>
-        /// <param name="value">The value to be written.</param>
-        /// <returns>True if the write was successful, otherwise false.</returns>
-        bool WriteWord(uint address, ushort value);
-
-        /// <summary>
-        /// Reads a byte from the SNES.
-        /// </summary>
-        /// <param name="address">The 24-bit SNES bus address.</param>
+        /// <param name="address">The 16-bit NES bus address.</param>
         /// <returns>The byte to be read if the read was successful, otherwise null.</returns>
-        byte? ReadByte(uint address);
-
-        /// <summary>
-        /// Reads an unsigned short from the SNES.
-        /// </summary>
-        /// <param name="address">The 24-bit SNES bus address.</param>
-        /// <returns>The byte to be read if the read was successful, otherwise null.</returns>
-        ushort? ReadWord(uint address);
+        byte? ReadByte(ushort address);
 
         /// <summary>
         /// Sets a bitmask at the specified address.
         /// </summary>
-        /// <param name="address">The 24-bit SNES bus address.</param>
+        /// <param name="address">The 16-bit NES bus address.</param>
         /// <param name="value">The bit mask.</param>
         /// <returns>True if the write was successful, otheriwse false.</returns>
-        bool SetBit(uint address, byte value);
+        bool SetBit(ushort address, byte value);
 
         /// <summary>
         /// Unsets a bitmask at the specified address.
         /// </summary>
-        /// <param name="address">The 24-bit SNES bus address.</param>
+        /// <param name="address">The 16-bit NES bus address.</param>
         /// <param name="value">The bit mask.</param>
         /// <returns>True if the write was successful, otheriwse false.</returns>
-        bool UnsetBit(uint address, byte value);
+        bool UnsetBit(ushort address, byte value);
     }
 }

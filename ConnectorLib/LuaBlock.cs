@@ -58,17 +58,17 @@ namespace ConnectorLib
         /// The memory domain (if any).
         /// </summary>
         [NotNull]
-        public string Domain { get; set; } = "";
-
-        /// <summary>
-        /// The domain-relative address (if any).
-        /// </summary>
-        public uint DomainAddress { get; set; }
+        public string Domain { get; set; } = "System Bus";
 
         /// <summary>
         /// The operating value, if any.
         /// </summary>
         public uint Value { get; set; }
+
+        /// <summary>
+        /// The block data, if any.
+        /// </summary>
+        public byte[] Block { get; set; }
 
         /// <summary>
         /// This is the primary LuaBlock constructor for use with user code.
@@ -95,8 +95,8 @@ namespace ConnectorLib
             Message = info.GetString("message") ?? string.Empty;
             Address = info.GetUInt32("address");
             Domain = info.GetString("domain") ?? string.Empty;
-            DomainAddress = info.GetUInt32("domainAddress");
             Value = info.GetUInt32("value");
+            Block = info.GetValue("block", typeof(byte[])) as byte[];
         }
 
         /// <summary>
@@ -112,8 +112,8 @@ namespace ConnectorLib
             info.AddValue("message", Message);
             info.AddValue("address", Address);
             info.AddValue("domain", Domain);
-            info.AddValue("domainAddress", DomainAddress);
             info.AddValue("value", Value);
+            info.AddValue("block", Block);
         }
 
         /// <summary>
@@ -125,10 +125,14 @@ namespace ConnectorLib
             ReadByte = 0x00,
             [Description("Read Word")]
             ReadWord = 0x01,
+            [Description("Read Block")]
+            ReadBlock = 0x0F,
             [Description("Write Byte")]
             WriteByte = 0x10,
             [Description("Write Word")]
             WriteWord = 0x11,
+            [Description("Write Block")]
+            WriteBlock = 0x1F,
             [Description("Set Bits")]
             SetBits = 0x20,
             [Description("Unset Bits")]

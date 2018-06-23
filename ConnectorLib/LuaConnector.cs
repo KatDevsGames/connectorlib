@@ -31,7 +31,7 @@ namespace ConnectorLib
     /// <summary>
     /// Implements ISNESConnector with a LUA script run in an emulator.
     /// </summary>
-    public class LuaConnector : ISNESConnector
+    public class LuaConnector : ISNESConnector, INESConnector
     {
         /// <summary>
         /// Backing storage for NextID.
@@ -82,7 +82,7 @@ namespace ConnectorLib
         /// The response values from reads.
         /// </summary>
         [NotNull]
-        private readonly Dictionary<uint, uint?> _response_values = new Dictionary<uint, uint?>();
+        private readonly Dictionary<uint, LuaBlock> _response_values = new Dictionary<uint, LuaBlock>();
 
         [CanBeNull] public IMemoryMapper Mapper { get; set; }
 
@@ -233,14 +233,13 @@ namespace ConnectorLib
             }, TaskCreationOptions.LongRunning);
         }
 
-        public IBatchWriteContext OpenBatchWriteContext()
-        {
-            return null;
-        }
+        [CanBeNull]
+        public IBatchWriteContext OpenBatchWriteContext() => null;
 
         [DebuggerStepThrough]
         private void KeepAlive() => WriteBlock(new LuaBlock(NextID, LuaBlock.CommandType.KeepAlive));
 
+        public bool SetBit(ushort address, byte value) => SetBit((uint)address, value);
         public bool SetBit(uint address, byte value)
         {
             _message_handler($"LuaConnector is setting a bit: [${address:X6} = #${value:X2}]");
@@ -252,6 +251,7 @@ namespace ConnectorLib
             return WriteBlock(block);
         }
 
+        public bool UnsetBit(ushort address, byte value) => UnsetBit((uint)address, value);
         public bool UnsetBit(uint address, byte value)
         {
             _message_handler($"LuaConnector is clearing a bit: [${address:X6} = #${value:X2}]");
@@ -263,6 +263,7 @@ namespace ConnectorLib
             return WriteBlock(block);
         }
 
+        bool INESConnector.WriteByte(ushort address, byte value) => WriteU8(address, value);
         bool ISNESConnector.WriteByte(uint address, byte value) => WriteU8(address, value);
         public bool WriteU8(uint address, byte value)
         {
@@ -287,6 +288,7 @@ namespace ConnectorLib
             return WriteBlock(block);
         }
 
+        byte? INESConnector.ReadByte(ushort address) => ReadU8(address);
         byte? ISNESConnector.ReadByte(uint address) => ReadU8(address);
         public byte? ReadU8(uint address)
         {
@@ -297,7 +299,7 @@ namespace ConnectorLib
             _response_events.Put(id, new ManualResetEvent(false));
             // ReSharper disable once PossibleNullReferenceException
             _response_events[id].WaitOne();
-            return (byte?)_response_values[id];
+            return (byte?)_response_values[id].Value;
         }
 
         ushort? ISNESConnector.ReadWord(uint address) => ReadU16(address);
@@ -311,7 +313,37 @@ namespace ConnectorLib
             _response_events.Put(id, new ManualResetEvent(false));
             // ReSharper disable once PossibleNullReferenceException
             _response_events[id].WaitOne();
-            return (ushort?)_response_values[id];
+            return (ushort?)_response_values[id].Value;
+        }
+
+        public bool WriteBytes(uint address, byte[] data)
+        {
+            _message_handler($"LuaConnector is writing {data?.Length??0} bytes: [${address:X6}]");
+            LuaBlock block = new LuaBlock(NextID, LuaBlock.CommandType.WriteWord)
+            {
+                Address = address,
+                Block = data
+            };
+            return WriteBlock(block);
+        }
+
+        public bool ReadBytes(uint address, byte[] buffer)
+        {
+            uint id = NextID;
+            _message_handler($"LuaConnector is reading: [${address:X6}]");
+
+            LuaBlock block = new LuaBlock(id, LuaBlock.CommandType.ReadBlock)
+            {
+                Address = address,
+                Block = buffer
+            };
+            if (!WriteBlock(block)) { return false; }
+
+            _response_events.Put(id, new ManualResetEvent(false));
+            // ReSharper disable once PossibleNullReferenceException
+            if (!_response_events[id].WaitOne()) { return false; }
+            _response_values[id].Block.CopyTo(buffer, 0);
+            return true;
         }
 
         /// <summary>
@@ -333,12 +365,11 @@ namespace ConnectorLib
         /// <returns>True if successful, otherwise false.</returns>
         private bool WriteBlock([NotNull] LuaBlock block)
         {
-            if ((Mapper != null) && (block.Address != 0))
+            /*if ((Mapper != null) && (block.Address != 0))
             {
                 (uint offset, string domain) t = Mapper.Translate(block.Address);
-                block.DomainAddress = t.offset;
                 block.Domain = t.domain;
-            }
+            }*/
 
             if (_stream == null) { return false; }
             string json = JsonConvert.SerializeObject(block);
@@ -367,7 +398,7 @@ namespace ConnectorLib
             if (request.Type != LuaBlock.CommandType.KeepAlive) {
                 _message_handler($"LuaConnector got a block. [{request.ID}]");
             }
-            _response_values.Put(request.ID, request.Value);
+            _response_values.Put(request.ID, request);
             if (_response_events.ContainsKey(request.ID)) { _response_events[request.ID]?.Set(); }
         }
     }

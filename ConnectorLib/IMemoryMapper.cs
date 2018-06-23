@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace ConnectorLib
 {
@@ -10,5 +7,6 @@ namespace ConnectorLib
     {
         (uint offset, string domain) Translate(uint offset);
         uint Translate(uint offset, string domain);
+        [NotNull] IEnumerable<string> Domains { get; }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConnectorLib
 {
+    /// <remarks>
+    /// This is unfinished, do not use.
+    /// </remarks>
     internal class SNESMapper : IMemoryMapper
     {
         private readonly MapperType _mapper_type;
@@ -62,6 +62,9 @@ namespace ConnectorLib
             if (snesOffset >= 0x7e0000u) { return snesOffset - 0x7e0000u; }
             return null;
         }
+
         public uint Translate(uint offset, string domain) { throw new NotImplementedException(); }
+
+        public IEnumerable<string> Domains => new[] { "System Bus", "ROM", "WRAM", "SRAM" };
     }
 }
