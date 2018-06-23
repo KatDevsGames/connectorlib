@@ -448,6 +448,8 @@ namespace ConnectorLib
                 List<byte> cmd = new List<byte>();
                 List<WriteDescriptor> shadowWrites = new List<WriteDescriptor>();
 
+                int runningBytes = 0;
+
                 foreach (WriteDescriptor descriptor in descriptors)
                 {
                     bool bTranslated = descriptor.address != descriptor.translatedAddress;
@@ -455,19 +457,29 @@ namespace ConnectorLib
 
                     if (!bTranslated) //IMPORTANT - you can't do more than about 24-32 bytes in a single operation using this
                     {
-                        if (!bCommandInProgress)
-                            BeginCommand(cmd);
+                        if (descriptor.data.Length < 16)
+                        {
+                            if (!bCommandInProgress) { BeginCommand(cmd); }
 
-                        AddSystemWriteToCommand(cmd, descriptor.address, descriptor.data);
-                        shadowWrites.Add(descriptor);
+                            AddSystemWriteToCommand(cmd, descriptor.address, descriptor.data);
+                            shadowWrites.Add(descriptor);
+                            runningBytes += descriptor.data.Length;
+                            if (runningBytes > 16)
+                            {
+                                CommitCommand(cmd, shadowWrites);
+                                runningBytes = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (bCommandInProgress) { CommitCommand(cmd, shadowWrites); }
+                            DMAToWRAM(descriptor.address, descriptor.data);
+                        }
                     }
                     else
                     {
                         //  Commit any unfinished command
-                        if (bCommandInProgress)
-                        {
-                            CommitCommand(cmd, shadowWrites);
-                        }
+                        if (bCommandInProgress) { CommitCommand(cmd, shadowWrites); }
 
                         //  Translated (sd2snes) writes happen natively on the cart
                         RequestType request = new RequestType
@@ -483,10 +495,7 @@ namespace ConnectorLib
                 }
 
                 //  Commit any unfinished command
-                if (cmd.Count > 0)
-                {
-                    CommitCommand(cmd, shadowWrites);
-                }
+                if (cmd.Count > 0) { CommitCommand(cmd, shadowWrites); }
             }
             catch
             {
@@ -573,33 +582,28 @@ namespace ConnectorLib
             finally { mActiveBatchWriteContext.Value = null; }
         }
 
-        public bool WriteBytes(uint address, byte[] data) => WriteBytes(address, data, false);
-        public bool WriteBytes(uint address, [NotNull] byte[] data, bool useDMA)
+        public bool WriteBytes(uint address, [NotNull] byte[] data)
         {
             lock (mTransmitLock)
             {
+                if (mActiveBatchWriteContext.Value != null && data != null && data.Length > 0)
+                {
+                    mActiveBatchWriteContext.Value.BatchWriteEntries.Add(new WriteDescriptor(address, TranslateAddress(address, TranslationMode.Write), data));
+                    return true;
+                }
                 if (data.Length < 16)
                 {
-                    if (mActiveBatchWriteContext.Value != null && data != null && data.Length > 0)
-                    {
-                        mActiveBatchWriteContext.Value.BatchWriteEntries.Add(new WriteDescriptor(address, TranslateAddress(address, TranslationMode.Write), data));
-                        return true;
-                    }
-
                     WriteDescriptor[] descriptors = new WriteDescriptor[]
                     {
                         new WriteDescriptor(address, TranslateAddress(address, TranslationMode.Write), data)
                     };
-
                     TransmitWriteDescriptors(descriptors);
                 }
-                else if (useDMA)
+                else
                 {
                     DMAToWRAM(address, data);
                 }
-                else throw new InvalidOperationException($"Cannot send large transfers in this mode. Please set {nameof(useDMA)} to true.");
             }
-
             return true;
         }
 
